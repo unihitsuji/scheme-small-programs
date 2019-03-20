@@ -2,7 +2,7 @@
 
 このフォルダは [Simple Scheme](http://bryanchadwick.com/simplescheme/) で実行できる小さなプログラムを収録しています。
 ## [Google Play Store](https://play.google.com/store/apps/details?id=chadwick.apps.simplescheme) で紹介されてるサンプルプログラム
-手入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
+自分で入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
 - [sample1.scm](about-simple-scheme/sample1.scm) 描画サンプル
 	<br><img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="150" height="256">
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
@@ -100,3 +100,6 @@ load 関数もファイル入出力関数もない。
 
 
 
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTk3MTI4NTI1OF19
+-->
