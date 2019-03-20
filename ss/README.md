@@ -4,16 +4,15 @@
 ## [Google Play Store](https://play.google.com/store/apps/details?id=chadwick.apps.simplescheme) で紹介されてるサンプルプログラム
 手入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
 - [sample1.scm](about-simple-scheme/sample1.scm) 描画サンプル
-	<!-- ![sample1.scm の実行結果](about-simple-scheme/sample1.png =300x512) -->
-	<br><img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="300" height="512">
+	<br><img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="150" height="256">
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
-	![sample2.scm の実行結果](about-simple-scheme/sample2.png)
+	<br><img alt="sample2.scm の実行結果" src="about-simple-scheme/sample2.png" width="150" height="256">
 ## 私が作ったもの
 - rk4.scm
 	- rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
 	- diagram 簡単なグラフ作成関数
 	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
-	![例](diagram.png)
+	<br><img alt="sample1.scm の実行結果" src="diagram.png" width="512" height="300">
 	- 参考: [数値計算を使って上微分方程式を解く〜ルンゲクッタ法の解説〜](http://shimaphoto03.com/science/rk-method/)
 <!---
 - my.scm ときどき引数の順番を変えたいと思うことありません？
