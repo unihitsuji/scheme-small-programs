@@ -12,7 +12,7 @@
 	- rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
 	- diagram 簡単なグラフ作成関数
 	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
-	<br><img alt="sample1.scm の実行結果" src="diagram.png" width="512" height="300">
+	<br><img alt="rk4.scm の実行結果" src="diagram.png" width="512" height="300">
 	- 参考: [数値計算を使って上微分方程式を解く〜ルンゲクッタ法の解説〜](http://shimaphoto03.com/science/rk-method/)
 <!---
 - my.scm ときどき引数の順番を変えたいと思うことありません？
@@ -101,5 +101,5 @@ load 関数もファイル入出力関数もない。
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk3MTI4NTI1OF19
+eyJoaXN0b3J5IjpbLTE0NTY5NTQyMDYsLTk3MTI4NTI1OF19
 -->
