@@ -4,9 +4,9 @@
 ## [Google Play Store](https://play.google.com/store/apps/details?id=chadwick.apps.simplescheme) で紹介されてるサンプルプログラム
 手入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
 - [sample1.scm](about-simple-scheme/sample1.scm) 描画サンプル
-	![sample1.scm の実行結果](about-simple-scheme/sample1.png)
+	![sample1.scm の実行結果](about-simple-scheme/sample1.png=300x512)
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
-	![sample2.scm の実行結果](about-simple-scheme/sample2.png)
+	![sample2.scm の実行結果](about-simple-scheme/sample2.png=300x512)
 ## 私が作ったもの
 - rk4.scm
 	- rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
