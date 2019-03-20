@@ -1,0 +1,10 @@
+(define (map2 f lst1 lst2)
+  (letrec ((loop (lambda (acc lst1 lst2)
+                   (if (or (empty? lst1) (empty? lst2))
+                     (reverse acc)
+                     (loop (cons (f (car lst1) (car lst2)) acc)
+                           (cdr lst1)
+                           (cdr lst2))))))
+    (loop empty lst1 lst2)))
+
+(map2 * '(1 2 3 4) '(5 6 7 8 9)) ; => '(5 12 21 32)
