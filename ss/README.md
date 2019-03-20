@@ -8,7 +8,7 @@
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
 	<br><img alt="sample2.scm の実行結果" src="about-simple-scheme/sample2.png" width="150" height="256">
 ## 私が作ったもの
-- rk4.scm
+- [rk4.scm](rk4.scm)
 	- rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
 	- diagram 簡単なグラフ作成関数
 	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
@@ -101,5 +101,5 @@ load 関数もファイル入出力関数もない。
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NTY5NTQyMDYsLTk3MTI4NTI1OF19
+eyJoaXN0b3J5IjpbNDc3MDI2OSwtOTcxMjg1MjU4XX0=
 -->
