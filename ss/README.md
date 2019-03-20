@@ -5,7 +5,7 @@
 手入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
 - [sample1.scm](about-simple-scheme/sample1.scm) 描画サンプル
 	<!-- ![sample1.scm の実行結果](about-simple-scheme/sample1.png =300x512) -->
-	<img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="300" height="512">
+	<br><img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="300" height="512">
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
 	![sample2.scm の実行結果](about-simple-scheme/sample2.png)
 ## 私が作ったもの
@@ -98,5 +98,6 @@ load 関数もファイル入出力関数もない。
 米若手上院議員みたいな風貌。
 論文書いて博士号取ってるドインテリ。
 こんなヤツ褒めたくないｗ
+
 
 
