@@ -1,0 +1,111 @@
+
+tsbase.c,293
+pointer ts_chdir(scheme *sc, pointer args) {ts_chdir3,21
+pointer ts_getcwd(scheme *sc, pointer args) {ts_getcwd13,258
+pointer ts_getenv(scheme *sc, pointer args) {ts_getenv21,448
+pointer ts_raw(scheme *sc, pointer args) {ts_raw32,717
+void init_tsbase(scheme *sc) {init_tsbase62,1396
+
+tsrepl.c,242
+void print_info(scheme *sc, const char *msg) {print_info3,21
+void print_port(scheme *sc, char *s, pointer p) {print_port14,339
+pointer ts_repl(scheme *sc, pointer args) {ts_repl29,1369
+void init_tsrepl(scheme *sc) {init_tsrepl55,2623
+
+tool.c,297
+int strlenc(const char *str, char c) {strlenc8,155
+int strlens(const char *str) {strlens21,541
+void trim_crlf(char *buf, int len) {trim_crlf29,689
+char *strrchar(const char *str, int c) {strrchar45,1300
+char *fullname(const char *dir, const char *name, const char *ext) {fullname51,1438
+
+ts-tool.c,2084
+int load_file(scheme *sc, char *fn) {load_file7,93
+int load_env(scheme *sc, char *env_key, char *name, char *ext) {load_env61,1397
+int load_lib(scheme *sc, char *name, char *ext) {load_lib127,3017
+int load_home(scheme *sc, char *name, char *ext) {load_home135,3208
+void disp4flow(const char *func, const char *msg1, const char *msg2) {disp4flow139,3304
+void set_error(scheme *sc, const char *msg, pointer a) {set_error145,3495
+int is_closed(char *str) {is_closed158,3808
+int load_string_raw(scheme *sc, char *name) {load_string_raw164,3889
+int read_eval(scheme *sc) {read_eval178,4329
+void print_value(scheme *sc, pointer val, int flag) {print_value274,6993
+void print_result(scheme *sc) {print_result319,8171
+int maxlen(char **strs) {maxlen372,9642
+const char *str_string       = "string";str_string381,9813
+const char *str_number       = "number";str_number382,9854
+const char *str_symbol       = "symbol";str_symbol383,9895
+const char *str_proc         = "proc";str_proc384,9936
+const char *str_pair         = "pair";str_pair385,9975
+const char *str_closure      = "closure";str_closure386,10014
+const char *str_continuation = "continuation";str_continuation387,10056
+const char *str_foreign      = "foreign";str_foreign388,10103
+const char *str_character    = "character";str_character389,10145
+const char *str_port         = "port";str_port390,10189
+const char *str_vector       = "vector";str_vector391,10228
+const char *str_macro        = "macro";str_macro392,10269
+const char *str_promise      = "promise";str_promise393,10309
+const char *str_environment  = "environment";str_environment394,10351
+const char *str_atom         = "atom";str_atom395,10397
+const char *str_immutable    = "immutable";str_immutable396,10436
+const char *str_syntax       = "syntax";str_syntax397,10480
+const char *str_empty        = "";str_empty398,10521
+const char *str4flag(int flag) {str4flag400,10557
+int is_flag(int flag, int what) {is_flag420,11297
+void define_list(scheme *sc, char *symbol, char **argv) {define_list427,11395
+
+ts-hack.c,89
+pointer reverse_in_place(scheme *sc, pointer term, pointer list) {reverse_in_place4,44
+
+ts-repl.c,113
+pointer ts_load_file(scheme *sc, pointer args) {ts_load_file6,80
+int main(int argc, char **argv) {main28,628
+
+tsbase.h,33
+  #define TSBASE_HTSBASE_H2,19
+
+tsrepl.h,33
+  #define TSREPL_HTSREPL_H2,19
+
+tool.h,29
+  #define TOOL_HTOOL_H2,17
+
+ts-tool.h,398
+  #define TS_TOOL_HTS_TOOL_H2,20
+  #define LOAD_LIB_ENV LOAD_LIB_ENV9,130
+  #define READ_BUF_SIZE READ_BUF_SIZE10,184
+  #define EVAL_BUF_SIZE EVAL_BUF_SIZE11,221
+  #define DISP4FLOW_FUNC_FORMAT DISP4FLOW_FUNC_FORMAT12,258
+  #define DISP4FLOW_MSG1_FORMAT DISP4FLOW_MSG1_FORMAT13,300
+  #define DISP4FLOW_MSG2_FORMAT DISP4FLOW_MSG2_FORMAT14,341
+  #define symbol_name(symbol_name16,382
+
+ts-hack.h,1043
+  #define TS_HACK_HTS_HACK_H2,20
+  #define car(car9,177
+  #define cdr(cdr10,220
+  #define InitFile InitFile13,297
+  #define T_MASKTYPE T_MASKTYPE16,361
+  #define T_SYNTAX T_SYNTAX17,389
+  #define T_IMMUTABLE T_IMMUTABLE18,428
+  #define T_ATOM T_ATOM19,467
+  #define T_MASK T_MASK22,551
+  enum scheme_types {scheme_types25,641
+    T_STRING           =  1,T_STRING26,663
+    T_NUMBER           =  2,T_NUMBER27,692
+    T_SYMBOL           =  3,T_SYMBOL28,721
+    T_PROC             =  4,T_PROC29,750
+    T_PAIR             =  5,T_PAIR30,779
+    T_CLOSURE          =  6,T_CLOSURE31,808
+    T_CONTINUATION     =  7,T_CONTINUATION32,837
+    T_FOREIGN          =  8,T_FOREIGN33,866
+    T_CHARACTER        =  9,T_CHARACTER34,895
+    T_PORT             = 10,T_PORT35,924
+    T_VECTOR           = 11,T_VECTOR36,953
+    T_MACRO            = 12,T_MACRO37,982
+    T_PROMISE          = 13,T_PROMISE38,1011
+    T_ENVIRONMENT      = 14,T_ENVIRONMENT39,1040
+    T_LAST_SYSTEM_TYPE = 14T_LAST_SYSTEM_TYPE40,1069
+
+ts-repl.h,35
+  #define TS_REPL_HTS_REPL_H2,20
