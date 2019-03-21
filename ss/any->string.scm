@@ -3,7 +3,7 @@
   (letrec
     ((atom->string  (lambda (val)
       (cond
-        ((string? val) val)
+        ((string? val) (string-append "\"" val "\""))
         ((symbol? val) (symbol->string val))
         ((number? val) (number->string val))
         ((empty?  val) "()"))))
@@ -30,7 +30,6 @@
       (string-append "(" (loop val) ")")
       (atom->string val))))
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
-
 (any->string '(1 2 (3 4) () (5) 6 7 (a (b (c d) e)) ()))
 (any->string "Hello")
 (any->string 'SYMBOL)

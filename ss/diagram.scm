@@ -1,35 +1,4 @@
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
-(define (any->string val)
-  (letrec
-    ((atom->string  (lambda (val)
-      (cond
-        ((string? val) (string-append "\"" val "\""))
-        ((symbol? val) (symbol->string val))
-        ((number? val) (number->string val))
-        ((empty?  val) "()"))))
-     (loop (lambda (val)
-      (if (empty? val)
-        ""
-        (if (not (cons? val))
-          (string-append (atom->string val))
-          (if (cons? (car val))
-            (begin
-              (string-append
-                "("
-                (loop (car val))
-                ")"
-                (if (empty? (cdr val)) "" " ")
-                (loop (cdr val))))
-            (begin
-              (string-append
-                (atom->string (car val))
-                (if (empty? (cdr val))
-                  ""
-                  (string-append " " (loop (cdr val))))))))))))
-    (if (cons? val)
-      (string-append "(" (loop val) ")")
-      (atom->string val))))
-;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
 ;;; very simple diagram
 (define (diagram x-range y-range display-size opts datum)
   (letrec
@@ -179,111 +148,17 @@
       (parse-options (scale-x (scale-y (axis
         (loop datum empty (empty-scene)))))))))
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
-;;; Runge-Kutta method
-;;;   for 1 independent variable and N dependet variable
-(define (rk4 h ini-vals funcs hook)
-  (letrec
-    ((N (length funcs))
-     (k1 (lambda (n vals)
-       (* h ((list-ref funcs n) vals))))
-     (k2 (lambda (n vals)
-       (* h 
-          ((list-ref funcs n)
-             (cons (+ (car vals) (/ h 2))
-               (letrec
-                 ((loop (lambda (acc i)
-                    (if (<= N i)
-                      (reverse acc)
-                      (loop (cons (+ (list-ref vals (+ i 1)) (/ (k1 i vals) 2)) acc) (+ i 1))))))
-                 (loop empty 0)))))))
-     (k3 (lambda (n vals)
-       (* h
-          ((list-ref funcs n)
-             (cons (+ (car vals) (/ h 2))
-               (letrec
-                 ((loop (lambda (acc i)
-                    (if (<= N i)
-                      (reverse acc)
-                      (loop (cons (+ (list-ref vals (+ i 1)) (/ (k2 i vals) 2)) acc) (+ i 1))))))
-                 (loop empty 0)))))))
-     (k4 (lambda (n vals)
-       (* h
-          ((list-ref funcs n)
-             (cons (+ (car vals) h)
-               (letrec
-                 ((loop (lambda (acc i)
-                    (if (<= N i)
-                      (reverse acc)
-                      (loop (cons (+ (list-ref vals (+ i 1)) (k3 i vals)) acc) (+ i 1))))))
-                 (loop empty 0)))))))
-     (next (lambda (n vals)
-             (+ (list-ref vals (+ n 1))
-               (/
-                 (+ (k1 n vals)
-                    (* 2 (k2 n vals))
-                    (* 2 (k3 n vals))
-                    (k4 n vals))
-                 6))))
-     (line (lambda (vals)
-             (cons
-               (+ h (car vals))
-               (letrec
-                 ((loop (lambda (acc n)
-                          (if (<= N n)
-                            (reverse acc)
-                            (loop
-                              (cons (next n vals) acc)
-                              (+ n 1))))))
-                 (loop empty 0)))))
-     (loop (lambda (acc vals)
-               (if (empty? (hook ini-vals vals))
-                 (reverse (cons vals acc))
-                 (loop (cons vals acc) (line vals))))))
-    (loop empty ini-vals)))
-;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
-;;; Lotka-Volterra equations
-;;;   t: day
-;;;   x: number of rabbits
-;;;   y: number of foxes
-;;;   a = 0.01 / b = 0.05 / c = 0.001
-;;;   dx/dt =  ax - cxy = fx(t,x,y)
-;;;   dy/dt = -by + cxy = fy(t,x,y)
-(define a 0.01)
-(define b 0.05)
-(define c 0.0001)
-
-(define (fx vals)
-  (let ((t (list-ref vals 0))
-        (x (list-ref vals 1))
-        (y (list-ref vals 2)))
-    (- (* a x) (* c x y))))
-
-(define (fy vals)
-  (let ((t (list-ref vals 0))
-        (x (list-ref vals 1))
-        (y (list-ref vals 2)))
-    (+ (* (- b) y) (* c x y))))
-
-;;; hook for stopping calculation
-(define (hook ini-vals vals)
-  (let ((t (list-ref vals 0))
-        (x (list-ref vals 1))
-        (y (list-ref vals 2)))
-    (begin
-      ;(println (any->string vals))
-      (if (>= t (* 1000)) empty vals))))  ;;; <<== IMPORTANT
-;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
-;;; calculates and displays result diagram
-(define lotka-volterra (rk4 1.0 (list 0 1000 100) (list fx fy) hook))
-(diagram
-  (list 0 1000 10) ;;; x scale from 0 to 1000 step 10
-  (list 0 1000 10) ;;; y scale from 0 to 1000 step 10
-  ;;; display size case 1024x600
-  (list 1024  600)  ;;; landscape
-  ;(list  600 1024)  ;;; portrait
-  ;;; options
+(define var (build-list 100 (lambda (i) (/ i 10.0))))
+(define datum
   (list
-    (list 'caption 'left "fall of the uppers\n    in food chain" 140 120)
-    (list 'legend (list "rabbits" "foxes") 800 800 10 20))
-  ;;; datum
-  lotka-volterra)
+    (map (lambda (x) (list x       (* x 10)))             var)
+    (map (lambda (x) (list x       (* x x)))              var)
+    (map (lambda (x) (list (+ x 1) (* 10 (log (+ x 1))))) (take var 90))))
+(diagram (list 0 11 11) (list 0 100 10)
+  (list 1024 600) ; landscape
+  (list  ; options
+    (list 'caption 'left "diagram function can use\ncaptions and legend." 2 80)
+    (list 'caption 'left "multi-line caption is available with \"\\n\""   2 70)
+    (list 'caption 'left "log 1 = 0"   0.7 25)
+    (list 'legend (list "x * 10" "x^2" "10 log(x + 1)") 9 60 10 20))
+  datum)

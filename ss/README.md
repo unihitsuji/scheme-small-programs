@@ -5,15 +5,51 @@
 自分で入力するのが面倒と思ったあなたのために、私がやりました(恩着せがましく)
 - [sample1.scm](about-simple-scheme/sample1.scm) 描画サンプル
 	<br><img alt="sample1.scm の実行結果" src="about-simple-scheme/sample1.png" width="150" height="256">
+<!--
 - [sample2.scm](about-simple-scheme/sample2.scm) REPLっぽいサンプル
 	<br><img alt="sample2.scm の実行結果" src="about-simple-scheme/sample2.png" width="150" height="256">
+-->
 ## 私が作ったもの
+- [diagram.scm](diagram.scm)
+	- 関数 diagram 簡単なグラフ作成関数
+	<br><img alt="diagram.scm の実行結果" src="diagram.png" width="512" height="300">
+```
+(define var (build-list 100 (lambda (i) (/ i 10.0))))
+(define datum
+  (list
+    (map (lambda (x) (list x       (* x 10)))             var)
+    (map (lambda (x) (list x       (* x x)))              var)
+    (map (lambda (x) (list (+ x 1) (* 10 (log (+ x 1))))) (take var 90))))
+(diagram (list 0 11 11) (list 0 100 10)
+  (list 1024 600) ; landscape
+  (list  ; options
+    (list 'caption 'left "diagram function can use\ncaptions and legend." 2 80)
+    (list 'caption 'left "multi-line caption is available with \"\\n\""   2 70)
+    (list 'caption 'left "log 1 = 0"   0.7 25)
+    (list 'legend (list "x * 10" "x^2" "10 log(x + 1)") 9 60 10 20))
+  datum)
+```
 - [rk4.scm](rk4.scm)
-	- rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
-	- diagram 簡単なグラフ作成関数
-	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
-	<br><img alt="rk4.scm の実行結果" src="diagram.png" width="512" height="300">
 	- 参考: [数値計算を使って上微分方程式を解く〜ルンゲクッタ法の解説〜](http://shimaphoto03.com/science/rk-method/)
+	- 関数 rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
+	- 関数 diagram 簡単なグラフ作成関数
+	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
+	<br><img alt="rk4.scm の実行結果" src="rk4.png" width="512" height="300">
+```
+(define lotka-volterra (rk4 1.0 (list 0 1000 100) (list fx fy) hook))
+(diagram
+  (list 0 1000 10) ;;; x scale from 0 to 1000 step 10
+  (list 0 1000 10) ;;; y scale from 0 to 1000 step 10
+  ;;; display size case 1024x600
+  (list 1024  600)  ;;; landscape
+  ;(list  600 1024)  ;;; portrait
+  ;;; options
+  (list
+    (list 'caption 'left "fall of the uppers\n    in food chain" 140 120)
+    (list 'legend (list "rabbits" "foxes") 800 800 10 20))
+  ;;; datum
+  lotka-volterra)
+```
 <!---
 - my.scm ときどき引数の順番を変えたいと思うことありません？
 	- my-foldl (foldl f ini lst) を (my-foldl ini lst f) に変えただけのマクロ
