@@ -31,9 +31,12 @@
       (atom->string val))))
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
 ;;; very simple diagram
-(define (diagram x-range y-range opts datum)
+(define (diagram x-range y-range display-size opts datum)
   (letrec ; 1024x600
-    ((wx 1024) (wy 480) (ux '(0.06 0.96)) (uy '(0.05 0.9))
+    ((wx (car  display-size))
+     (wy (cadr display-size))
+     (ux '(0.09 0.96))
+     (uy '(0.05 0.9))
      (tx (lambda (x)
         (letrec ((w (- (cadr x-range) (car x-range)))
                  (m (/ (* wx (- (cadr ux) (car ux))) w)))
@@ -90,7 +93,7 @@
                    scn))))
      (colors (lambda(lst)
        (if (empty? lst)
-         (list "green" "yellow" "blue")
+         (list "purple" "blue" "green" "yellow" "red")
          lst)))
      (draw (lambda (x ys rest cs scn)
        (let ((cs (colors cs)))
@@ -223,6 +226,8 @@
 ;;; calculates and displays result diagram
 (define lotka-volterra (rk4 1.0 (list 0 1000 100) (list fx fy) hook))
 (diagram '(0 1000 10) '(0 1000 10)
+  ;'(1024 480)  ;;; 1024x0600
+  '( 600 924)  ;;; 0600x1024
   (list
     (list 'cap 'left "rabbits" 0 1000)
     (list 'cap 'left "foxes"   0  100)
