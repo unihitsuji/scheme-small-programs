@@ -36,6 +36,39 @@
 	- 上記２つの関数を使って Lotka-Volterra の方程式を数値解析しグラフにします。
 	<br><img alt="rk4.scm の実行結果" src="rk4.png" width="512" height="300">
 ```
+;;; Lotka-Volterra equations
+;;;   t: day
+;;;   x: number of rabbits
+;;;   y: number of foxes
+;;;   a = 0.01 / b = 0.05 / c = 0.001
+;;;   dx/dt =  ax - cxy = fx(t,x,y)
+;;;   dy/dt = -by + cxy = fy(t,x,y)
+(define a 0.01)
+(define b 0.05)
+(define c 0.0001)
+
+(define (fx vals)
+  (let ((t (list-ref vals 0))
+        (x (list-ref vals 1))
+        (y (list-ref vals 2)))
+    (- (* a x) (* c x y))))
+
+(define (fy vals)
+  (let ((t (list-ref vals 0))
+        (x (list-ref vals 1))
+        (y (list-ref vals 2)))
+    (+ (* (- b) y) (* c x y))))
+
+;;; hook for stopping calculation
+(define (hook ini-vals vals)
+  (let ((t (list-ref vals 0))
+        (x (list-ref vals 1))
+        (y (list-ref vals 2)))
+    (begin
+      ;(println (any->string vals))
+      (if (>= t (* 1000)) empty vals))))  ;;; <<== IMPORTANT
+;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
+;;; calculates and displays result diagram
 (define lotka-volterra (rk4 1.0 (list 0 1000 100) (list fx fy) hook))
 (diagram
   (list 0 1000 10) ;;; x scale from 0 to 1000 step 10
