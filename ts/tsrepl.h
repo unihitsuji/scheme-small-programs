@@ -9,4 +9,5 @@
   extern void init_tsrepl(scheme *sc);
   /*  maybe unnecessary, but harmless  */
   extern pointer ts_repl(scheme *sc, pointer args);
+  extern pointer ts_print_context(scheme *sc, pointer args);
 #endif
