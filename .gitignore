@@ -1,12 +1,5 @@
-.gitignore~
-.gitignore#*
-.#.gitignore
+*~
+*#*
+.#*
 
-*.scm~
-*.scm#*
-.#*.scm
-
-*.md~
-*.md#*
-.#*.md
 

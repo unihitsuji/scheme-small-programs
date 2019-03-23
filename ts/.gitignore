@@ -1,6 +1,5 @@
-*~
-TAGS
 zzz/*
+TAGS
 *.o
 *.so
 ts-repl
