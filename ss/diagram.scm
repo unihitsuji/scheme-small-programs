@@ -1,11 +1,33 @@
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
 ;;; very simple diagram
-(define (diagram x-range y-range display-size opts datum)
+(define (diagram x-min2max y-min2max display-size opts datum)
   (letrec
-    ((wx (car display-size))
+    ((pi 3.141592653589793)
+     (e  2.718281828459045)
+     (K  1000)
+     (M  1000000)
+     (wx (car display-size))
      (wy (- (cadr display-size) 120)) ; tool, title and navigation bar
      (ux '(0.09 0.96))
      (uy '(0.05 0.9))
+     (scale-base (lambda (lst)
+       (if (<= 4 (length lst))
+         (let ((x (cond
+                    ((symbol=? (list-ref lst 3) 'pi) pi)
+                    ((symbol=? (list-ref lst 3) 'e)  e)
+                    ((symbol=? (list-ref lst 3) 'K)  K)
+                    ((symbol=? (list-ref lst 3) 'M)  M)
+                    (else 1))))
+           (list (* (list-ref lst 0) x)
+                 (* (list-ref lst 1) x)
+                    (list-ref lst 2)
+                    (list-ref lst 3)
+                 x))
+         (if (<= 3 (length lst))
+           lst
+           (list (list-ref lst 0) (list-ref lst 1) 1)))))
+     (x-range (scale-base x-min2max))
+     (y-range (scale-base y-min2max))
      (tx (lambda (x)
         (letrec ((w (- (cadr x-range) (car x-range)))
                  (m (/ (* wx (- (cadr ux) (car ux))) w)))
@@ -54,39 +76,67 @@
        (if (empty? lst)
          (list "purple" "blue" "green" "red")
          lst)))
+     (limit-fp (lambda (n len)
+       (let ((n (if (ormap (lambda (c) (char=? c '.')) (string->list (number->string n)))
+                  (/ (round (* n (expt 10 len))) 1.0 (expt 10 len))
+                  n)))
+         (if (= (abs n) 0.0)
+           "0"
+           (if (< (abs n) 1)
+             (string-append
+               (if (< n 0) "-" "")
+               (list->string (cdr (string->list (number->string (abs n))))))
+             (number->string n))))))
+     (scale (lambda (n range)
+       (if (< (length range) 5)
+         (let* ((nstr (limit-fp n 3))
+                (clst (reverse (string->list nstr))))
+           (if (and (< 2 (length clst)) (char=? (car clst) '0') (char=? (cadr clst) '.'))
+             (list->string (reverse (cddr clst)))
+             nstr))
+         (let* ((nstr (limit-fp (/ n (list-ref range 4)) 3))
+                (clst (reverse (string->list nstr)))
+                (p (symbol->string (list-ref range 3))))
+           (cond
+             ((string=? nstr "0") nstr)
+             ((string=? nstr "1.0") p)
+             ((string=? nstr "-1.0") (string-append "-" p))
+             ((and (< 2 (length clst)) (char=? (car clst) '0') (char=? (cadr clst) '.'))
+                 (string-append (list->string (reverse (cddr clst))) p))
+             (else (string-append nstr p)))))))
      (scale-x (lambda (scn)
        (letrec
-         ((start (car  x-range))
-          (end   (cadr x-range))
-          (div   (if (empty? (cddr x-range)) 1 (caddr x-range)))
-          (step (/ (- end start) div))
+         ((start (list-ref x-range 0))
+          (end   (list-ref x-range 1))
+          (div   (list-ref x-range 2))
+          (step (/ (- end start) (* div 1.0)))
           (loop (lambda (n scn)
             (let ((z (+ start (* step n))))
               (if (< div n)
                 scn
                 (loop (+ n 1)
                   (linex (tx z) (- (ty 0) 5) (tx z) (+ (ty 0) 5) "black"
-                    (textx 'top (number->string z) (tx z) (+ (ty 0) 5)
+                    (textx 'top (scale z x-range) (tx z) (+ (ty 0) 5)
                       scn))))))))
          (loop 0 scn))))
      (scale-y (lambda (scn)
        (letrec
-         ((start (car  y-range))
-          (end   (cadr y-range))
-          (div   (if (empty? (cddr y-range)) 1 (caddr y-range)))
-          (step (/ (- end start) div))
+         ((start (list-ref y-range 0))
+          (end   (list-ref y-range 1))
+          (div   (list-ref y-range 2))
+          (step (/ (- end start) (* div 1.0)))
           (loop (lambda (n scn)
             (let ((z (+ start (* step n))))
               (if (< div n)
                 scn
                 (loop (+ n 1)
                   (linex (- (tx 0) 5) (ty z) (+ (tx 0) 5) (ty z) "black"
-                    (textx 'right (number->string z) (- (tx 0) 10) (ty z)
+                    (textx 'right (scale z y-range) (- (tx 0) 10) (ty z)
                       scn))))))))
          (loop 0 scn))))
      (axis (lambda (scn)
-       (linex (tx 0) (ty 0) (tx (cadr x-range)) (ty 0) "black"
-         (linex (tx 0) (ty 0) (tx 0) (ty (cadr y-range)) "black"
+       (linex (tx (car x-range)) (ty 0) (tx (cadr x-range)) (ty 0) "black"
+         (linex (tx 0) (ty (car y-range)) (tx 0) (ty (cadr y-range)) "black"
                    scn))))
      (legend (lambda (strs x y px py scn)
        (letrec
@@ -148,13 +198,14 @@
       (parse-options (scale-x (scale-y (axis
         (loop datum empty (empty-scene)))))))))
 ;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
+;;; ex1
 (define var (build-list 100 (lambda (i) (/ i 10.0))))
 (define datum
   (list
     (map (lambda (x) (list x       (* x 10)))             var)
     (map (lambda (x) (list x       (* x x)))              var)
     (map (lambda (x) (list (+ x 1) (* 10 (log (+ x 1))))) (take var 90))))
-(diagram (list 0 11 11) (list 0 100 10)
+(diagram (list 0 11 11) (list 0 100 10) ; min max step-count
   (list 1024 600) ; landscape
   (list  ; options
     (list 'caption 'left "diagram function can use\ncaptions and legend." 2 80)
@@ -162,3 +213,16 @@
     (list 'caption 'left "log 1 = 0"   0.7 25)
     (list 'legend (list "x * 10" "x^2" "10 log(x + 1)") 9 60 10 20))
   datum)
+;;;;;;;;;1;;;;;;;;;2;;;;;;;;;3;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;;
+;;; ex2
+;(define var (build-list 101 (lambda (i) (/ (* 3.14159265358979 (- i 50)) 50))))
+;(define datum
+;  (list
+;    (map (lambda (x) (list x (sin x))) var)
+;    (map (lambda (x) (list x (cos x))) var)))
+;(diagram (list -2 2 16 'pi) (list -1 1 10) ; min max step-count
+;  (list 1024 600) ; landscape
+;  (list  ; options
+;    (list 'caption 'left "diagram function can use pi scale." (* -1.7 3.14) 0.8)
+;    (list 'legend (list "sin" "cos") (* 1.5 3.14) 0.8 10 20))
+;  datum)

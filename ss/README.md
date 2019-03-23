@@ -12,7 +12,11 @@
 ## 私が作ったもの
 - [diagram.scm](diagram.scm)
 	- 関数 diagram 簡単なグラフ作成関数
-	<br><img alt="diagram.scm の実行結果" src="diagram.png" width="512" height="300">
+		- 実行例 1
+		<br><img alt="diagram.scm ex1 の実行結果" src="diagram-ex1.png" width="512" height="300">
+		- 実行例 2
+		<br><img alt="diagram.scm ex2 の実行結果" src="diagram-ex2.png" width="512" height="300">
+
 ```
 (define var (build-list 100 (lambda (i) (/ i 10.0))))
 (define datum
@@ -29,6 +33,21 @@
     (list 'legend (list "x * 10" "x^2" "10 log(x + 1)") 9 60 10 20))
   datum)
 ```
+
+```
+(define var (build-list 101 (lambda (i) (/ (* 3.14159265358979 (- i 50)) 50))))
+(define datum
+  (list
+    (map (lambda (x) (list x (sin x))) var)
+    (map (lambda (x) (list x (cos x))) var)))
+(diagram (list -2 2 16 'pi) (list -1 1 10) ; min max step-count
+  (list 1024 600) ; landscape
+  (list  ; options
+    (list 'caption 'left "diagram function can use pi scale." (* -1.7 3.14) 0.8)
+    (list 'legend (list "sin" "cos") (* 1.5 3.14) 0.8 10 20))
+  datum)
+```
+
 - [rk4.scm](rk4.scm)
 	- 参考: [数値計算を使って常微分方程式を解く〜ルンゲクッタ法の解説〜](http://shimaphoto03.com/science/rk-method/)
 	- 関数 rk4 ４次のルンゲ・クッタ法で常微分数値解析する関数
@@ -112,7 +131,7 @@ load 関数もファイル入出力関数もない。
 (cons 1 (cons 2 '()))   ; => (list 1 2)
 (cons 1 (cons 2 empty)) ; => (list 1 2)
 ```
-### rest 引数は使えないってことですね。
+### rest 引数も使えないってことです。
 ```
 ;lang-dif2.scm
 ;NG
