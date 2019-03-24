@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/tinyscheme -1
+#!/data/data/com.termux/files/home/tinyscheme-1.41/scheme -1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4;;;;;;;;;5;;;;;;;;;6;;;;;;;;;7;;;;;;;;
 (define (hello-rk4) (display "Hello written in rk4.scm\n"))

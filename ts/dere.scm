@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/tinyscheme -1
+#!/data/data/com.termux/files/home/tinyscheme-1.41/scheme -1
 
 ;;;;;; general functions
 ;;;;;;; >>>>>>> lib.scm
