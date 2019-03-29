@@ -50,14 +50,20 @@ char *strrchar(const char *str, int c) {
 
 char *fullname(const char *dir, const char *name, const char *ext) {
   char *ret;
-  int len = strlen(dir);
-  len += strlen(name);
-  len += strlen(ext);
+  int len = 0;
+  if (dir  != NULL) len += strlen(dir);
+  if (name != NULL) len += strlen(name);
+  if (ext  != NULL) len += strlen(ext);
   ret = (char *)malloc(sizeof(char *) * (len + 2));
   if (ret == NULL) return NULL;
-  strcpy(ret, dir);
+  if (dir == NULL || strcmp(dir, "") == 0) {
+    ret[0] = '\0';
+  } else {
+    strcpy(ret, dir);
+    strcat(ret, "/");
+  }
   if (strcmp(dir, "") != 0) strcat(ret, "/");
-  strcat(ret, name);
-  strcat(ret, ext);
+  if (name != NULL) strcat(ret, name);
+  if (ext  != NULL) strcat(ret, ext);
   return ret;
 }

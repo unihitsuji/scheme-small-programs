@@ -2,4 +2,5 @@ zzz/*
 TAGS
 *.o
 *.so
+ut-tool
 ts-repl
