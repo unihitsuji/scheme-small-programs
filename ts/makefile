@@ -1,40 +1,48 @@
-PREFIX = /data/data/com.termux/files/usr
-CC     = gcc
-INC    = $(HOME)/tinyscheme-1.41
-LIB    = $(HOME)/tinyscheme-1.41
-CFLAGS = -I$(INC) -fPIC
-LFLAGS = -L$(LIB) -ltinyscheme
+CC      = gcc
+AR      = ar
+MAKE    = make
+CFLAGS  = -I$(HOME)/tinyscheme-1.41 -fPIC
+CFLAGS += -DDEBUG
+LFLAGS  = -L$(HOME)/tinyscheme-1.41 -ltinyscheme -lncurses
 
-sos      = tsbase.so tsrepl.so
-objs     = tsbase.o  tsrepl.o  tool.o ts-tool.o ts-hack.o ts-repl.o
-srcs     = tsbase.c  tsrepl.c  tool.c ts-tool.c ts-hack.c ts-repl.c ut-tool.c
-headers  = tsbase.h  tsrepl.h  tool.h ts-tool.h ts-hack.h ts-repl.h
+sos       = tsbase.so tsrepl.so tscurses.so
+soobjs    = tsbase.o  tsrepl.o  tscurses.o
+sosrcs    = tsbase.c  tsrepl.c  tscurses.c
+soheaders = tsbase.h  tsrepl.h  tscurses.h
 
-all: TAGS $(sos) ts-repl ut-tool
+objs      = tool.o ts-tool.o ts-hack.o
+srcs      = tool.c ts-tool.c ts-hack.c
+headers   = tool.h ts-tool.h ts-hack.h debug.h
 
-TAGS: $(srcs) $(headers)
-	ctags -e -R $(srcs) $(headers)
+all: TAGS $(sos) ut-tool
+
+TAGS: $(sosrcs) $(soheaders) $(srcs) $(headers)
+	ctags -e -R $^
 
 $(sos): %.so: %.o
 	$(CC) -shared $(LFLAGS) -o $@ $<
 
-$(objs): %.o: %.c %.h
+$(soobjs) : %.o : %.c %.h debug.h makefile
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-ts-repl.o: ts-tool.h ts-hack.h tsbase.h tool.h
-ts-tool.o: ts-hack.h
+$(objs)   : %.o : %.c %.h debug.h makefile
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-.PHONY: clean tags install uninstall ls
+ts-tool.o: ts-hack.h debug.h makefile
+
+.PHONY: clean ut install uninstall ls
 clean:
-	rm -f $(sos) ts-repl *.o
+	make clean -C ut
+	rm -f $(sos) *.o
+ut: all
+	make ut -C ut
 
-install: $(PREFIX)/bin/ts-repl $(PREFIX)/lib/tsbase.so $(PREFIX)/lib/tsrepl.so $(PREFIX)/share/tinyscheme/ts-repl.scm
+install: $(PREFIX)/lib/tsbase.so $(PREFIX)/lib/tsrepl.so $(PREFIX)/lib/tscurses.so
 
 uninstall:
 	rm -f $(PREFIX)/bin/ts-repl
 	rm -f $(PREFIX)/lib/tsbase.so
 	rm -f $(PREFIX)/lib/tsrepl.so
-	rm -f $(PREFIX)/share/tinyscheme/ts-repl.scm
 
 ls:
 	ls $(PREFIX)/bin
@@ -48,17 +56,5 @@ $(PREFIX)/lib/tsbase.so: tsbase.so
 $(PREFIX)/lib/tsrepl.so: tsrepl.so
 	cp $< $@
 
-$(PREFIX)/bin/ts-repl: ts-repl
+$(PREFIX)/lib/tscurses.so: tscurses.so
 	cp $< $@
-
-$(PREFIX)/share/tinyscheme/ts-repl.scm: ts-repl.scm
-	cp $< $@
-
-ts-repl : $(objs)
-	$(CC) $(LFLAGS) -o $@ $(objs)
-
-ut-tool : ut-tool.o tool.o
-	$(CC) $(LFLAGS) -o $@ $+
-
-ut-tool.o : ut-tool.c tool.h
-	$(CC) $(CFLAGS) -o $@ -c $<

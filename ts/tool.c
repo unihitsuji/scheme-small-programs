@@ -60,9 +60,9 @@ char *fullname(const char *dir, const char *name, const char *ext) {
     ret[0] = '\0';
   } else {
     strcpy(ret, dir);
-    strcat(ret, "/");
+    len = strlen(dir);
+    if (ret[len - 1] != '/') strcat(ret, "/");
   }
-  if (strcmp(dir, "") != 0) strcat(ret, "/");
   if (name != NULL) strcat(ret, name);
   if (ext  != NULL) strcat(ret, ext);
   return ret;
