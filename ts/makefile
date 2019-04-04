@@ -14,7 +14,7 @@ objs      = tool.o ts-tool.o ts-hack.o
 srcs      = tool.c ts-tool.c ts-hack.c
 headers   = tool.h ts-tool.h ts-hack.h debug.h
 
-all: TAGS $(sos) ut-tool
+all: TAGS $(sos)
 
 TAGS: $(sosrcs) $(soheaders) $(srcs) $(headers)
 	ctags -e -R $^
