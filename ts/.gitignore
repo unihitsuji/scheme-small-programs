@@ -1,6 +1,6 @@
-zzz/*
+zzz
 TAGS
 *.o
+*.a
 *.so
-ut-tool
 ts-repl
