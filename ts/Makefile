@@ -1,9 +1,10 @@
-CC      = gcc
-AR      = ar
-MAKE    = make
+include Makefile.inc
+
 CFLAGS  = -I$(HOME)/tinyscheme-1.41 -fPIC
 CFLAGS += -DDEBUG
 LFLAGS  = -L$(HOME)/tinyscheme-1.41 -ltinyscheme -lncurses
+
+deps      = debug.h Makefile.inc Makefile
 
 sos       = tsbase.so tsrepl.so tscurses.so
 soobjs    = tsbase.o  tsrepl.o  tscurses.o
@@ -17,44 +18,44 @@ headers   = tool.h ts-tool.h ts-hack.h debug.h
 all: TAGS $(sos)
 
 TAGS: $(sosrcs) $(soheaders) $(srcs) $(headers)
-	ctags -e -R $^
+	$(CTAGS) -e -R $^
 
 $(sos): %.so: %.o
 	$(CC) -shared $(LFLAGS) -o $@ $<
 
-$(soobjs) : %.o : %.c %.h debug.h makefile
+$(soobjs) : %.o : %.c %.h $(deps)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(objs)   : %.o : %.c %.h debug.h makefile
+$(objs)   : %.o : %.c %.h $(deps)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-ts-tool.o: ts-hack.h debug.h makefile
+ts-tool.o: ts-hack.h $(deps)
 
 .PHONY: clean ut install uninstall ls
 clean:
-	make clean -C ut
-	rm -f $(sos) *.o
+	$(MAKE) clean -C ut
+	-$(RM) -f $(sos) *.o
 ut: all
-	make ut -C ut
+	$(MAKE) ut -C ut
 
 install: $(PREFIX)/lib/tsbase.so $(PREFIX)/lib/tsrepl.so $(PREFIX)/lib/tscurses.so
 
 uninstall:
-	rm -f $(PREFIX)/bin/ts-repl
-	rm -f $(PREFIX)/lib/tsbase.so
-	rm -f $(PREFIX)/lib/tsrepl.so
+	-$(RM) -f $(PREFIX)/bin/ts-repl
+	-$(RM) -f $(PREFIX)/lib/tsbase.so
+	-$(RM) -f $(PREFIX)/lib/tsrepl.so
 
 ls:
-	ls $(PREFIX)/bin
-	ls $(PREFIX)/lib
-	ls $(PREFIX)/share/tinyscheme
-	ls $(HOME)/tinyscheme-1.41
+	-$(LS) $(PREFIX)/bin
+	-$(LS) $(PREFIX)/lib
+	-$(LS) $(PREFIX)/share/tinyscheme
+	-$(LS) $(HOME)/tinyscheme-1.41
 
 $(PREFIX)/lib/tsbase.so: tsbase.so
-	cp $< $@
+	$(CP) $< $@
 
 $(PREFIX)/lib/tsrepl.so: tsrepl.so
-	cp $< $@
+	$(CP) $< $@
 
 $(PREFIX)/lib/tscurses.so: tscurses.so
-	cp $< $@
+	$(CP) $< $@

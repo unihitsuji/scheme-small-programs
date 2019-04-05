@@ -1,9 +1,10 @@
-CC      = gcc
-AR      = ar
-MAKE    = make
+include ../Makefile.inc
+
 CFLAGS  = -I.. -I$(PREFIX)/local/include
 CFLAGS += -DDEBUG
 LFLAGS  = -L$(PREFIX)/local/lib -lcunit -lncurses -lpcunit
+
+deps    = ../debug.h ../Makefile.inc Makefile
 
 exes    = assert-tool-ng   assert-tool-ok   fct-tool-ng   fct-tool-ok   cunit-tool-ng   cunit-tool-ok   pcunit-tool-ng   pcunit-tool-ok
 objs    = assert-tool-ng.o assert-tool-ok.o fct-tool-ng.o fct-tool-ok.o cunit-tool-ng.o cunit-tool-ok.o pcunit-tool-ng.o pcunit-tool-ok.o
@@ -15,7 +16,7 @@ headers =
 all: $(exes)
 
 clean:
-	rm -f $(exes) *.o
+	-$(RM) -f $(exes) *.o
 
 ut: assert fct cunit pcunit
 
@@ -35,10 +36,10 @@ pcunit: all
 	-./pcunit-tool-ng --color
 	-./pcunit-tool-ok --color
 
-$(exes) : % : %.o ../tool.o
-	$(CC) $(LFLAGS) -o $@ $^
+$(exes) : %   : %.o ../tool.o $(deps)
+	$(CC) $(LFLAGS) -o $@ $< ../tool.o
 
-$(objs) : %.o : %.c ../tool.h ../debug.h makefile
+$(objs) : %.o : %.c ../tool.h $(deps)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 ../tool.o : ../tool.c ../tool.h
